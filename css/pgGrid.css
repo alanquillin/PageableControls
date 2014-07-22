@@ -1,0 +1,17 @@
+.pgGrid thead td{
+    font-weight: bold;
+}
+
+.pgGrid thead td .icon,
+.pgGrid thead td [class*=" icon-"],
+.pgGrid thead td [class*=" icon-"] {
+    width: 16px;
+    height: 16px;
+    float: right;
+}
+
+.pgGrid thead td.sortable:hover{
+    text-decoration: underline;
+    color: #006dcc;
+    cursor: pointer;
+}
