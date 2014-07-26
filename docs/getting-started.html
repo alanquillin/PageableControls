@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Getting started · Pageable Controls</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/css/docs.css" rel="stylesheet">
+    <link href="/js/google-code-prettify/prettify.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/js/html5shiv.js"></script>
+      <![endif]-->
+
+    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <script src="/js/holder/holder.js"></script>
+    <script src="/js/google-code-prettify/prettify.js"></script>
+
+    <script src="/js/application.js"></script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/assets/ico/favicon.png">
+
+  </head>
+
+  <body data-spy="scroll" data-target=".bs-docs-sidebar">
+
+  <!-- Navbar
+  ================================================== -->
+  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+          <div class="container">
+              <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <div class="nav-collapse collapse">
+                  <ul class="nav">
+                      <li class="">
+                          <a href="/">Home</a>
+                      </li>
+                      <li class="active">
+                          <a href="/getting-started.html">Get started</a>
+                      </li>
+                      <li class="">
+                          <a href="/controls/pgGrid.html">pgGrid</a>
+                      </li>
+                      <li class="">
+                          <a href="/controls/pgSearchAhead.html">pgSearchAhead</a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+  </div>
+
+<!-- Subhead
+================================================== -->
+<header class="jumbotron subhead" id="overview">
+  <div class="container">
+    <h1>Getting started</h1>
+    <p class="lead">Overview of the project, its contents, and how to get started with a simple template.</p>
+  </div>
+</header>
+
+
+  <div class="container">
+
+    <!-- Docs nav
+    ================================================== -->
+    <div class="row">
+      <div class="span3 bs-docs-sidebar">
+        <ul class="nav nav-list bs-docs-sidenav">
+          <li><a href="#download-project"><i class="icon-chevron-right"></i> Download</a></li>
+          <li><a href="#requirements-dependencies"><i class="icon-chevron-right"></i> Requirements / dependencies</a></li>
+          <li><a href="#contents"><i class="icon-chevron-right"></i> Project contents</a></li>
+        </ul>
+      </div>
+      <div class="span9">
+
+
+
+        <!-- Download
+        ================================================== -->
+        <section id="download-project">
+          <div class="page-header">
+            <h1>1. Download</h1>
+          </div>
+          <p class="lead"></p>
+
+          <div class="row-fluid">
+            <div class="span6">
+                <h3>Latest release</h3>
+                <p>Download the compiled and minified versions of all files (CSS, JS, and images) for the latest release. Does not include latest source files or docs.</p>
+                <p><a class="btn btn-large btn-primary" href="/dist/PageableControls.zip">Download latest release</a></p>
+            </div>
+            <div class="span6">
+                <h3>Project source</h3>
+                <p>Get the original project files and docs by downloading the latest version from GitHub.<br/><br/></p>
+                <p><a class="btn btn-large" href="https://github.com/jsistudios/pageablecontrols/zipball/master" >Download source</a></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Project requirements and dependencies
+        ================================================== -->
+        <section id="requirements-dependencies">
+          <div class="page-header">
+              <h1>2. Requirements / dependencies</h1>
+          </div>
+
+            <p class="lead"></p>
+
+            <div class="row-fluid">
+                <div class="span4">
+                    <img class="marketing-img" src="/img/jQuery-Logo.png">
+                </div>
+                <div class="span8">
+                    <h3>jQuery</h3>
+                    <p>These controls were built and tested with jquery 1.9.1 and may not work with earlier versions (< v1.9) due to breaking changed introduced in the v1.9.x described <a href="http://jquery.com/download/">here</a>.</p>
+                    <p><a class="btn btn-medium btn-primary" href="http://jquery.com/" >Project home</a>
+                       <a class="btn btn-medium" href="http://code.jquery.com/jquery-1.9.1.min.js" >Download v1.9.1</a></p>
+                </div>
+            </div>
+
+            <div class="row-fluid">
+                <div class="span4" style="margin-top: 10px">
+                    <img class="marketing-img" src="/img/bootstrap-icon.png">
+                </div>
+                <div class="span8">
+                    <h3 style="margin-top: 0">Twitter bootstrap <em>[optional]</em></h3>
+                    <p>The default behavior for these controls utilize the styles and functionality from Bootstrap v2 (support for v3 will be available shortly).  However, this library is not required and the dependent styles can be overwritten.</p>
+                    <p><a class="btn btn-medium btn-primary" href="http://getbootstrap.com/2.3.2" >Project home</a>
+                       <a class="btn btn-medium" href="http://getbootstrap.com/2.3.2/assets/bootstrap.zip" >Download v2.3.2</a></p>
+                </div>
+            </div>
+
+            <p class="lead">Make sure you add the dependencies on the page before the project files.</p>
+
+<pre class="prettyprint linenums">
+&lt;link rel="stylesheet/less" href="/css/bootstrap.min.css"&gt;
+&lt;link rel="stylesheet/less" href="/css/pageablecontrols.min.css"&gt;
+&lt;script src="/js/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script src="/js/bootstrap.min.js"&gt;&lt;/script
+&lt;script src="/js/pageablecontrols.min.js"&gt;&lt;/script&gt;
+</pre>
+        </section>
+
+        <!-- Contents
+        ================================================== -->
+        <section id="contents">
+          <div class="page-header">
+            <h1>3. Project contents</h1>
+          </div>
+          <p class="lead">Within the download you'll find the following file structure and contents, logically grouping common assets and providing both compiled and minified variations.</p>
+          <p>Once downloaded, unzip the compressed folder to see the structure of (the compiled) Pageable Controls. You'll see something like this:</p>
+<pre class="prettyprint">
+  PageableControls/
+  ├── css/
+  │   ├── bundles/
+  │   │   ├── PageableControls.bundled.css
+  │   │   ├── PageableControls.bundled.min.css
+  │   │   ├── pgGrid.bundled.css
+  │   │   ├── pgGrid.bundled.min.css
+  │   │   ├── pgSearchAhead.bundled.css
+  │   │   └── pgSearchAhead.bundled.min.css
+  │   ├── PageableControls.css
+  │   ├── PageableControls.min.css
+  │   ├── pgGrid.css
+  │   ├── pgGrid.min.css
+  │   ├── pgSearchAhead.css
+  │   └── pgSearchAhead.min.css
+  ├── js/
+  │   ├── PageableControls.js
+  │   ├── PageableControls.min.js
+  │   ├── pgGrid.js
+  │   ├── pgGrid.min.js
+  │   ├── pgSearchAhead.js
+  │   └── pgSearchAhead.min.js
+  └── img/
+      ├── glyphicons-halflings.png
+      ├── glyphicons-halflings-grey.png
+      └── glyphicons-halflings-blue.png
+</pre>
+
+        </section>
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <!-- Footer
+  ================================================== -->
+  <footer class="footer">
+      <div class="container">
+          <p>Designed and built by <a href="http://twitter.com/alanquillin" target="_blank">@alanquillin</a> at <a href="http://www.jsistudios.com" target="_blank">JSI Studios, LLC</a>.</p>
+          <p>Code licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>.</p>
+      </div>
+  </footer>
+
+  </body>
+</html>

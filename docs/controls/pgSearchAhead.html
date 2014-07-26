@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>pgSearchAhead · Pageable Controls</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/css/docs.css" rel="stylesheet">
+    <link href="/js/google-code-prettify/prettify.css" rel="stylesheet">
+    <link href="/dist/css/pgSearchAhead.css" rel="stylesheet">
+    <link href="/dist/css/PageableControls.css" rel="stylesheet">
+
+    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <script src="/js/holder/holder.js"></script>
+    <script src="/js/google-code-prettify/prettify.js"></script>
+
+    <script src="/js/application.js"></script>
+    <script src="/dist/js/pgSearchAhead.js"></script>
+    <script src="/dist/js/Pager.js"></script>
+    <script src="/dist/js/utils.js"></script>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/assets/ico/favicon.png">
+
+</head>
+
+<body data-spy="scroll" data-target=".bs-docs-sidebar">
+
+<!-- Navbar
+================================================== -->
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="">
+                        <a href="/">Home</a>
+                    </li>
+                    <li class="">
+                        <a href="/getting-started.html">Get started</a>
+                    </li>
+                    <li class="">
+                        <a href="/controls/pgGrid.html">pgGrid</a>
+                    </li>
+                    <li class="active">
+                        <a href="/controls/pgSearchAhead.html">pgSearchAhead</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Subhead
+================================================== -->
+<header class="jumbotron subhead" id="overview">
+    <div class="container">
+        <h1>pgSearchAhead</h1>
+        <p class="lead">A pageable search enhanced "typeahead" control.</p>
+    </div>
+</header>
+
+<div class="container">
+    <br/>
+    <p class="lead">This control is an enhanced version of the <a href="http://getbootstrap.com/2.3.2/javascript.html#typeahead">typeahead.js</a> component from the Twitter <a href="http://getbootstrap.com/2.3.2/index.html">Bootstrap</a> library.  This is based on the v2.3.2 implementation and adds support for remote searching and paging.</p>
+
+    <div class="row">
+        <div class="span3 bs-docs-sidebar">
+            <ul class="nav nav-list bs-docs-sidenav">
+                <li><a href="#basic-example"><i class="icon-chevron-right"></i> Basic Search Example</a></li>
+                <li><a href="#handling-errors"><i class="icon-chevron-right"></i> Handling Errors</a></li>
+            </ul>
+        </div>
+        <div class="span9">
+
+            <section id="basic-example" style="padding-top: 0">
+                <div class="page-header">
+                    <h3>1. Basic Search Example</h3>
+                </div>
+                <div class="row-fluid">
+                    <div class="span4">
+                        <div class="pull-left toolbar-search control-group">
+                            <input type="text" class="search-query error" id="searchterm" placeholder="Enter search query" />
+                        </div>
+                    </div>
+                    <div class="span4">
+                        <h4 style="display: inline">Results:</h4>
+                        <span id="searchResults">&nbsp;</span>
+                    </div>
+                </div>
+                <h4>Code:</h4>
+<pre class="prettyprint linenums">
+&lt;div class="pull-left toolbar-search control-group"&gt;
+    &lt;input type="text" class="search-query error" id="searchterm" placeholder="Enter search query" /&gt;
+&lt;/div&gt;
+
+&lt;script type="application/javascript"&gt;
+    $(document).ready(function(){
+        $('#searchterm').pgSearchAhead({
+            url: '/support/search.php',
+            minLength: 3,
+            itemContentProperty: 'value',
+            pager: new Pager({showPageSizeSelector: false})
+        }).on('onSearchStarted', function(event, url){
+            toggleLoadingImg(true);
+        }).on('onSearchComplete', function(event, data){
+            toggleLoadingImg(false);
+        }).on('onItemSelected', function(event, item){
+            $('#searchResults').html(item['value']);
+        });
+    });
+
+    function toggleLoadingImg(show) {
+        $('#searchterm').toggleClass('input-loading', show);
+    }
+
+&lt;/script&gt;
+</pre>
+            </section>
+
+            <section id="handling-errors">
+                <div class="page-header">
+                    <h3>2. Handling Errors</h3>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3">
+                <div class="pull-left toolbar-search control-group">
+                    <input type="text" class="search-query error" id="searchterm2" placeholder="Enter search query" />
+                    <span class="help-inline" id="search-fatal2" style="display: none;">Unable to contact the search service.</span>
+                </div>
+                </div>
+                    </div>
+                <h4>Code:</h4>
+<pre class="prettyprint linenums">
+&lt;div class="pull-left toolbar-search control-group"&gt;
+    &lt;input type="text" class="search-query error" id="searchterm" placeholder="Enter search query" /&gt;
+    &lt;span class="help-inline" id="search-fatal" style="display: none;">Unable to contact the search service.&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;script type="application/javascript"&gt;
+    $(document).ready(function(){
+        $('#searchterm2').pgSearchAhead({
+            url: '/support/search2.php',
+            minLength: 3,
+            itemContentProperty: 'value',
+            pager: new Pager({showPageSizeSelector: false})
+        }).on('onSearchFailed', function(event, error){
+            toggleSearchError(true, error);
+        });
+    });
+
+    function toggleSearchError(isError, errorMessage) {
+        if (isError) {
+            $('#searchterm2').closest('div.control-group').addClass('error');
+            $('#search-fatal2').text("Error: " + errorMessage);
+            $('#search-fatal2').show();
+        } else {
+            $('#searchterm2').closest('div.control-group').removeClass('error');
+            $('#search-fatal2').hide();
+        }
+    }
+
+&lt;/script&gt;
+</pre>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+    $(document).ready(function(){
+        $('#searchterm').pgSearchAhead({
+            url: '/support/search.php',
+            minLength: 3,
+            itemContentProperty: 'value',
+            pager: new Pager({showPageSizeSelector: false})
+        }).on('onSearchStarted', function(event, url){
+            toggleLoadingImg(true);
+        }).on('onSearchComplete', function(event, data){
+            toggleLoadingImg(false);
+        }).on('onItemSelected', function(event, item){
+            $('#searchResults').html(item['value']);
+        });
+
+        $('#searchterm2').pgSearchAhead({
+            url: '/support/search2.php',
+            minLength: 3,
+            itemContentProperty: 'value',
+            pager: new Pager({showPageSizeSelector: false})
+        }).on('onSearchFailed', function(event, error){
+            toggleSearchError(true, error);
+        });
+    });
+
+    function toggleSearchError(isError, errorMessage) {
+        if (isError) {
+            $('#searchterm2').closest('div.control-group').addClass('error');
+            $('#search-fatal2').text("Error: " + errorMessage);
+            $('#search-fatal2').show();
+        } else {
+            $('#searchterm2').closest('div.control-group').removeClass('error');
+            $('#search-fatal2').hide();
+        }
+    }
+
+    function toggleLoadingImg(show) {
+        $('#searchterm').toggleClass('input-loading', show);
+    }
+
+</script>
+
+<!-- Footer
+================================================== -->
+<footer class="footer">
+    <div class="container">
+        <p>Designed and built by <a href="http://twitter.com/alanquillin" target="_blank">@alanquillin</a> at <a href="http://www.jsistudios.com" target="_blank">JSI Studios, LLC</a>.</p>
+        <p>Code licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>.</p>
+    </div>
+</footer>
+
+</body>
+</html>
