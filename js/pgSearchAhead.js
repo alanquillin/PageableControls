@@ -12,6 +12,7 @@
         this.process = this.options.process || this.process;
         this.render = this.options.render || this.render;
         this.buildFooter = this.options.buildFooter || this.buildFooter;
+        this.buildQueryObject = this.options.buildQueryObject || this.buildQueryObject;
 
         // initialize objects
         this.$element = $(element);
@@ -92,7 +93,7 @@
             var that = this;
             this.searchStarted(query);
 
-            this.req = $.get(this.url, { query: query, page: page, limit: limit },
+            this.req = $.get(this.url, this.buildQueryObject(query, page, limit),
                 function ( data, textStatus, jqXHR) {
                     if (typeof (data) === 'undefined' || !data || data.error) {
                         that.searchFailed(jqXHR, textStatus, data.error);
@@ -114,6 +115,9 @@
                     return that;
                 });
             return this;
+        },
+        buildQueryObject: function(query, page, limit){
+            return { query: query, page: page, limit: limit };
         },
         searchStarted: function(query){
             this.$element.trigger('onSearchStarted', query);
