@@ -83,6 +83,7 @@
             <ul class="nav nav-list bs-docs-sidenav">
                 <li><a href="#basic-example"><i class="icon-chevron-right"></i> Basic Grid Example</a></li>
                 <li><a href="#formatter-example"><i class="icon-chevron-right"></i> Column formatter</a></li>
+                <li><a href="#row-formatter-example"><i class="icon-chevron-right"></i> Row formatter</a></li>
             </ul>
         </div>
         <div class="span9">
@@ -155,6 +156,30 @@
 &lt;/script&gt;
 </pre>
             </section>
+
+            <section id="row-formatter-example">
+                <div class="page-header">
+                    <h3>3. Row formatter</h3>
+                </div>
+                <div id="myGridDiv3"></div>
+                <h4>Code:</h4>
+<pre class="prettyprint linenums">
+&lt;div id="myGridDiv3"&gt;&lt;/div&gt;
+
+&lt;script language="JavaScript"&gt;
+    $(document).ready(function () {
+        $('#myGridDiv2').pgGrid({
+            url: '/support/grid-data.php',
+            dataModel: [
+                { name: 'Id', index: 'id'},
+                { name: 'Value', index: 'value'}
+            ],
+            title: "&lt;h3&gt;Test Data&lt;/h3&gt;"
+        });
+    });
+&lt;/script&gt;
+</pre>
+            </section>
         </div>
     </div>
 </div>
@@ -199,6 +224,21 @@
                 }
             ],
             title: "<h3>Test Data</h3>"
+        });
+
+        $('#myGridDiv3').pgGrid({
+            url: '/support/grid-data.php',
+            dataModel: [
+                { name: 'Id', index: 'id'},
+                { name: 'Value', index: 'value'}
+            ],
+            title: "<h3>Test Data</h3>",
+            rowFormatter: function($row, item){
+                if(parseInt(item.id) % 2 == 0){
+                    $row.css('background-color', 'red')
+                }
+            },
+            gridClass: 'table table-condensed table-bordered'
         });
     });
 </script>

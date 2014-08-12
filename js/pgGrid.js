@@ -17,10 +17,11 @@
         this.sortColumn = this.options.sortColumn;
         this.sortDirection = this.options.sortDirection;
         this.url = this.options.url;
-        this.dataTotalIndex = this.options.dataTotalIndex;
-        this.dataItemIndex = this.options.dataItemIndex;
+        this.dataTotalProperty = this.options.dataTotalProperty;
+        this.dataItemProperty = this.options.dataItemProperty;
         this.padLeft = this.options.padLeft;
         this.itemIdProperty = this.options.itemIdProperty;
+        this.showTitle = Utils.getOption(this.options, "showTitle", true);
 
         // initialize methods
         this.getData = this.options.getData || this.getData;
@@ -30,6 +31,7 @@
         this.onSuccess = this.options.onSuccess || function(){ return; };
         this.onError = this.options.onError || function () { return; };
         this.buildQueryObject = this.options.buildQueryObject || this.buildQueryObject;
+        this.rowFormatter = this.options.rowFormatter || function() {return;};
 
         // initialize objects
         this.$grid = $('<table class="pgGrid"><thead><tr></tr></thead><tbody></tbody><tfoot><tr><td></td></tr></tfoot></table>');
@@ -44,12 +46,13 @@
         this.pager = this.options.pager || new Pager({});
         $(this.pager).on('onRefresh', function(event, data){
             that.refresh(data.currentPage, data.pageSize,
-                function(d){ data.onComplete(d[that.dataTotalIndex]); });
+                function(d){ data.onComplete(d[that.dataTotalProperty]); });
         });
 
         // bind title, table
         this.$grid.addClass(this.options.gridClass);
-        this.$element.append(this.$title);
+        if(this.showTitle)
+            this.$element.append(this.$title);
         this.$element.append(this.$initLoader);
         this.$initLoader.show();
         this.buildHeader();
@@ -91,7 +94,7 @@
             return { page: page, limit: pageSize, sort_column: sortCol, sort_direction: sortDir };
         },
         process: function (data) {
-            if (!data[this.dataItemIndex].length) {
+            if (!data[this.dataItemProperty].length) {
                 return this.hide();
             }
 
@@ -104,33 +107,33 @@
         buildBody: function(data){
             this.$body.empty();
 
-            for (var i in data[this.dataItemIndex]) {
-                this.buildRow(data[this.dataItemIndex][i], 0);
+            for (var i in data[this.dataItemProperty]) {
+                this.buildRow(data[this.dataItemProperty][i], 0);
             }
         },
         buildRow: function(item, childLevel, parentId){
             var that = this;
             var id = item[this.itemIdProperty];
 
-            var row = $("<tr></tr>")
+            var $row = $("<tr></tr>")
                 .attr('id', id)
                 .on('mouseEnter', 'tbody tr', $.proxy(this.mouseEnter, this))
                 .on('mouseLeave', 'tbody tr', $.proxy(this.mouseLeave, this));
 
-
             if(childLevel > 0) {
                 if($.inArray(parentId, this.expandedRowIds) < 0)
-                    row.hide();
-                row.attr('data-parent-id', parentId);
+                    $row.hide();
+                $row.attr('data-parent-id', parentId);
             }
 
-            this.buildCols(item, row, childLevel);
-            this.$body.append(row);
+            this.buildCols(item, $row, childLevel);
+            this.rowFormatter($row, item);
+            this.$body.append($row);
 
             if (item.hasOwnProperty(this.childRowProperty) && item[this.childRowProperty] && item[this.childRowProperty].length) {
                 var expander = $('<i class="'+ ($.inArray(id, this.expandedRowIds) >= 0 ? 'icon-chevron-down' : 'icon-chevron-right') + ' icon-active"></i>')
                     .on('click', function(){ that.toggleChildren($(this), id); });
-                row.find('td:first').prepend(expander);
+                $row.find('td:first').prepend(expander);
 
                 for(var i in item[this.childRowProperty]){
                     this.buildRow(item[this.childRowProperty][i], childLevel + 1, id);
@@ -255,8 +258,8 @@
             { name: 'Id', index: 'id'},
             { name: 'Value', index: 'value'}
         ],
-        dataTotalIndex: 'total',
-        dataItemIndex: 'items',
+        dataTotalProperty: 'total',
+        dataItemProperty: 'items',
         gridClass: 'table table-condensed table-bordered table-striped',
         initLoader: '<div><i class="icon-refresh icon-spin"></i> Loading data...</div>',
         initialPage: 1,
