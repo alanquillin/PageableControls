@@ -22,6 +22,7 @@
         this.padLeft = this.options.padLeft;
         this.itemIdProperty = this.options.itemIdProperty;
         this.showTitle = Utils.getOption(this.options, "showTitle", true);
+        this.showPager = Utils.getOption(this.options, "showPager", true);
 
         // initialize methods
         this.getData = this.options.getData || this.getData;
@@ -34,13 +35,24 @@
         this.rowFormatter = this.options.rowFormatter || function() {return;};
 
         // initialize objects
-        this.$grid = $('<table class="pgGrid"><thead><tr></tr></thead><tbody></tbody><tfoot><tr><td></td></tr></tfoot></table>');
+        this.$grid = $('<table class="pgGrid"><thead><tr></tr></thead><tbody></tbody></table>');
         this.$title = $(this.options.title);
         this.$initLoader = $(this.options.initLoader);
         this.$header = this.$grid.find('thead');
         this.$body = this.$grid.find('tbody');
-        this.$footer = this.$grid.find('tfoot');
-        this.$footerRow = this.$footer.find('td:first').attr('colspan', this.dataModel.length);
+
+        if(!this.options.pagerContainer){
+            this.$footer = $('<tfoot><tr><td></td></tr></tfoot>');
+            this.$footerRow = this.$footer.find('td:first').attr('colspan', this.dataModel.length);
+
+            if(this.showPager)
+                this.$grid.append(this.$footer);
+
+            this.$pagerContainer = this.$footerRow;
+        }
+        else{
+            this.$pagerContainer = this.options.pagerContainer;
+        }
 
         // initialize pager
         this.pager = this.options.pager || new Pager({});
@@ -94,7 +106,7 @@
             return { page: page, limit: pageSize, sort_column: sortCol, sort_direction: sortDir };
         },
         process: function (data) {
-            if (!data[this.dataItemProperty].length) {
+            if (!data || !data[this.dataItemProperty] || !data[this.dataItemProperty].length) {
                 return this.hide();
             }
 
@@ -140,18 +152,20 @@
                 }
             }
         },
-        buildCols: function(item, row, childLevel){
+        buildCols: function(item, $row, childLevel){
             for(var i in this.dataModel){
                 var model = this.dataModel[i];
-                var col = $('<td></td>');
+                var $col = $('<td></td>');
                 var val = item[model.index];
-                if(typeof model.formatter !== 'undefined')
-                    val = model.formatter(val, item);
-                col.append(val);
-                row.append(col);
+                if(typeof model.dataFormatter !== 'undefined')
+                    val = model.dataFormatter(val, item);
+                if(typeof model.cellFormatter !== 'undefined')
+                    val = model.cellFormatter(val, item, $col);
+                $col.append(val);
+                $row.append($col);
             }
 
-            row.find('td').first().css('padding-left', (16 * childLevel) + this.padLeft);
+            $row.find('td').first().css('padding-left', (16 * childLevel) + this.padLeft);
         },
         buildHeader: function(){
             var headerRow = this.$header.find('tr:first');
@@ -200,7 +214,8 @@
             }
         },
         buildFooter: function(){
-            this.$footerRow.append(this.pager.$container);
+            if(this.showPager)
+                this.$pagerContainer.append(this.pager.$container);
         },
         mouseEnter: function(e) {
             this.mousedover = true;

@@ -81,16 +81,40 @@
     <div class="row">
         <div class="span3 bs-docs-sidebar">
             <ul class="nav nav-list bs-docs-sidenav">
-                <li><a href="#basic-example"><i class="icon-chevron-right"></i> Basic Grid Example</a></li>
-                <li><a href="#formatter-example"><i class="icon-chevron-right"></i> Column formatter</a></li>
-                <li><a href="#row-formatter-example"><i class="icon-chevron-right"></i> Row formatter</a></li>
+                <li><a href="#getting-started"><i class="icon-chevron-right"></i> Getting Started</a></li>
+                <li><a href="#options"><i class="icon-chevron-right"></i> Options</a></li>
+                <li><a href="#data-model"><i class="icon-chevron-right"></i> Data Model</a></li>
+                <li><a href="#examples"><i class="icon-chevron-right"></i> Examples</a></li>
+                <li class="sub-nav"><a href="#basic-example"><i class="icon-chevron-right"></i> Basic Grid Example</a></li>
+                <li class="sub-nav"><a href="#data-formatter-example"><i class="icon-chevron-right"></i> Data Item Formatter</a></li>
+                <li class="sub-nav"><a href="#cell-formatter-example"><i class="icon-chevron-right"></i> Cell Formatter</a></li>
+                <li class="sub-nav"><a href="#row-formatter-example"><i class="icon-chevron-right"></i> Row Formatter</a></li>
+                <li class="sub-nav"><a href="#no-title-example"><i class="icon-chevron-right"></i> Hiding the Title</a></li>
+                <li class="sub-nav"><a href="#no-pager-example"><i class="icon-chevron-right"></i> Hiding the Pager</a></li>
+                <li class="sub-nav"><a href="#cust-pager-cont-example"><i class="icon-chevron-right"></i> Custom Pager Container</a></li>
             </ul>
         </div>
         <div class="span9">
-            <section id="basic-example" style="padding-top: 0">
+            <section id="getting-started" style="padding-top: 0">
+                <h3>Getting started</h3>
+            </section>
+
+            <section id="options" style="padding-top: 0">
+                <h3>Options</h3>
+            </section>
+
+            <section id="data-model" style="padding-top: 0">
+                <h3>Data Model</h3>
+            </section>
+
+            <section id="examples" style="padding-top: 0">
                 <div class="page-header">
-                    <h3>1. Basic Grid Example</h3>
+                    <h2>Examples</h2>
                 </div>
+            </section>
+
+            <section id="basic-example" style="padding-top: 0">
+                <h3>1. Basic Grid Example</h3>
                 <div id="myGridDiv"></div>
                 <h4>Code:</h4>
 <pre class="prettyprint linenums">
@@ -111,10 +135,8 @@
 </pre>
             </section>
 
-            <section id="formatter-example">
-                <div class="page-header">
-                    <h3>2. Column formatter</h3>
-                </div>
+            <section id="data-formatter-example">
+                <h3>2. Data formatter</h3>
                 <div id="myGridDiv2"></div>
                 <h4>Code:</h4>
 <pre class="prettyprint linenums">
@@ -127,7 +149,7 @@
             dataModel: [
                 { name: 'Id', index: 'id'},
                 { name: 'Value', index: 'value',
-                    formatter: function(val, item){
+                    dataFormatter: function(val, item){
                         if(Math.floor(item.id) % 2 == 0)
                             return val;
 
@@ -135,7 +157,7 @@
                     }
                 },
                 { name: 'Fibonacci Sequence', sortable: false,
-                    formatter: function(val, item){
+                    dataFormatter: function(val, item){
                         var first,second,seq;
                         for(var i=0;i&lt;item.id;i++){
                             if(i === 0){
@@ -157,10 +179,8 @@
 </pre>
             </section>
 
-            <section id="row-formatter-example">
-                <div class="page-header">
-                    <h3>3. Row formatter</h3>
-                </div>
+            <section id="cell-formatter-example">
+                <h3>3. Cell formatter</h3>
                 <div id="myGridDiv3"></div>
                 <h4>Code:</h4>
 <pre class="prettyprint linenums">
@@ -168,13 +188,114 @@
 
 &lt;script language="JavaScript"&gt;
     $(document).ready(function () {
-        $('#myGridDiv2').pgGrid({
+        $('#myGridDiv3').pgGrid({
             url: '/support/grid-data.php',
+            dataModel: [
+                { name: 'Id', index: 'id'},
+                { name: 'Value', index: 'value', cellFormatter: function(cellValue, item, $cell){
+                    if(parseInt(item.id) % 2 == 0){
+                        $cell.addClass('info')
+                    }
+                }}
+            ],
+            title: "&lt;h3&gt;Test Data&lt;/h3&gt;"
+        });
+    });
+&lt;/script&gt;
+</pre>
+            </section>
+
+            <section id="row-formatter-example">
+                <h3>4. Row formatter</h3>
+                <div id="myGridDiv4"></div>
+                <h4>Code:</h4>
+<pre class="prettyprint linenums">
+&lt;div id="myGridDiv4"&gt;&lt;/div&gt;
+
+&lt;script language="JavaScript"&gt;
+    $(document).ready(function () {
+        $('#myGridDiv4').pgGrid({
+            url: '/support/grid-data.php',
+            rowFormatter: function($row, item){
+                if(parseInt(item.id) % 2 == 0){
+                    $row.css('background-color', 'red')
+                }
+            },
             dataModel: [
                 { name: 'Id', index: 'id'},
                 { name: 'Value', index: 'value'}
             ],
             title: "&lt;h3&gt;Test Data&lt;/h3&gt;"
+        });
+    });
+&lt;/script&gt;
+</pre>
+            </section>
+
+            <section id="no-title-example">
+                <h3>5. Hiding the Title</h3>
+                <div id="myGridDiv5"></div>
+                <h4>Code:</h4>
+<pre class="prettyprint linenums">
+&lt;div id="myGridDiv5"&gt;&lt;/div&gt;
+
+&lt;script language="JavaScript"&gt;
+    $(document).ready(function () {
+        $('#myGridDiv6').pgGrid({
+            url: '/support/grid-data.php',
+            dataModel: [
+                { name: 'Id', index: 'id'},
+                { name: 'Value', index: 'value'}
+            ],
+            showTitle: false
+        });
+    });
+&lt;/script&gt;
+</pre>
+            </section>
+
+            <section id="no-pager-example">
+                <h3>6. Hiding the Pager</h3>
+                <div id="myGridDiv6"></div>
+                <h4>Code:</h4>
+<pre class="prettyprint linenums">
+&lt;div id="myGridDiv6"&gt;&lt;/div&gt;
+
+&lt;script language="JavaScript"&gt;
+    $(document).ready(function () {
+        $('#myGridDiv6').pgGrid({
+            url: '/support/grid-data.php',
+            dataModel: [
+                { name: 'Id', index: 'id'},
+                { name: 'Value', index: 'value'}
+            ],
+            showPager: false,
+            title: "&lt;h3&gt;Test Data&lt;/h3&gt;"
+        });
+    });
+&lt;/script&gt;
+</pre>
+            </section>
+
+            <section id="cust-pager-cont-example">
+                <h3>7. Custom Pager Container</h3>
+                <div id="pagerContainer" class="pull-right custom-pager-container"></div>
+                <div id="myGridDiv7"></div>
+                <h4>Code:</h4>
+<pre class="prettyprint linenums">
+&lt;div id="myGridDiv7"&gt;&lt;/div&gt;
+&lt;div id="pagerContainer" class="pull-right"&gt;&lt;/div&gt;
+
+&lt;script language="JavaScript"&gt;
+    $(document).ready(function () {
+        $('#myGridDiv7').pgGrid({
+            url: '/support/grid-data.php',
+            dataModel: [
+                { name: 'Id', index: 'id'},
+                { name: 'Value', index: 'value'}
+            ],
+            title: "&lt;h3&gt;Test Data&lt;/h3&gt;",
+            pagerContainer: $('#pagerContainer')
         });
     });
 &lt;/script&gt;
@@ -200,7 +321,7 @@
             dataModel: [
                 { name: 'Id', index: 'id'},
                 { name: 'Value', index: 'value',
-                    formatter: function(val, item){
+                    dataFormatter: function(val, item){
                         if(Math.floor(item.id) % 2 == 0)
                             return val;
 
@@ -208,7 +329,7 @@
                     }
                 },
                 { name: 'Fibonacci Sequence', sortable: false,
-                    formatter: function(val, item){
+                    dataFormatter: function(val, item){
                         var first,second,seq;
                         for(var i=0;i<item.id;i++){
                             if(i === 0){
@@ -230,14 +351,57 @@
             url: '/support/grid-data.php',
             dataModel: [
                 { name: 'Id', index: 'id'},
+                { name: 'Value', index: 'value', cellFormatter: function(cellValue, item, $cell){
+                    if(parseInt(item.id) % 2 == 0){
+                        $cell.addClass('info')
+                    }
+                }}
+            ],
+            title: "<h3>Test Data</h3>"
+        });
+
+        $('#myGridDiv4').pgGrid({
+            url: '/support/grid-data.php',
+            dataModel: [
+                { name: 'Id', index: 'id'},
                 { name: 'Value', index: 'value'}
             ],
             title: "<h3>Test Data</h3>",
             rowFormatter: function($row, item){
                 if(parseInt(item.id) % 2 == 0){
-                    $row.css('background-color', 'red')
+                    $row.addClass('info');
                 }
             },
+            gridClass: 'table table-condensed table-bordered'
+        });
+
+        $('#myGridDiv5').pgGrid({
+            url: '/support/grid-data.php',
+            dataModel: [
+                { name: 'Id', index: 'id'},
+                { name: 'Value', index: 'value'}
+            ],
+            showTitle: false,
+            gridClass: 'table table-condensed table-bordered'
+        });
+
+        $('#myGridDiv6').pgGrid({
+            url: '/support/grid-data.php',
+            dataModel: [
+                { name: 'Id', index: 'id'},
+                { name: 'Value', index: 'value'}
+            ],
+            showPager: false,
+            gridClass: 'table table-condensed table-bordered'
+        });
+
+        $('#myGridDiv7').pgGrid({
+            url: '/support/grid-data.php',
+            dataModel: [
+                { name: 'Id', index: 'id'},
+                { name: 'Value', index: 'value'}
+            ],
+            pagerContainer: $('#pagerContainer'),
             gridClass: 'table table-condensed table-bordered'
         });
     });
