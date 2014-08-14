@@ -257,13 +257,10 @@
     /* pgGrid Plugin Definition
      * =========================== */
 
-    $.fn.pgGrid = function(option) {
+    $.fn.pgGrid = function(options) {
         return this.each(function() {
-            var $this = $(this),
-                data = $this.data('pggrid'),
-                options = typeof option == 'object' && option;
-            if (!data) $this.data('pggrid', (data = new PGGrid(this, options)));
-            if (typeof option == 'string') data[option]();
+            var $this = $(this);
+            $this.data('pggrid', new PGGrid(this, options));
         });
     };
 
