@@ -63,8 +63,8 @@
             this.$menu
                 .insertAfter(this.$element)
                 .css({
-                    top: pos.top + pos.height
-                    , left: pos.left
+                    top: pos.top + pos.height,
+                    left: pos.left
                 })
                 .show();
 
@@ -146,14 +146,14 @@
                 if(!item.hasOwnProperty(this.itemContentProperty))
                     return null;
 
-                return item[this.itemContentProperty] = this.highlighter(item[this.itemContentProperty], query);
+                item[this.itemContentProperty] = this.highlighter(item[this.itemContentProperty], query);
+                return item[this.itemContentProperty];
             }
 
-            var query = query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
+            query = query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
             return item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
                 return '<strong class="highlight">' + match + '</strong>';
-            })
-            return this;
+            });
         },
         render: function (items, query, total, selectFirstItem) {
             var that = this;
@@ -161,7 +161,7 @@
             items = $(items).map(function (i, item) {
                 i = $(that.item).data('data-value', item);
                 i.find('a').html(that.highlighter(item, query));
-                return i[0]
+                return i[0];
             });
 
             if(selectFirstItem)
@@ -178,8 +178,8 @@
             return this;
         },
         next: function (event) {
-            var active = this.$menu.find('.active').removeClass('active')
-                , next = active.next();
+            var active = this.$menu.find('.active').removeClass('active');
+            next = active.next();
 
             if (!next.length)
                 next = $(this.$menu.find('li')[0]);
@@ -188,8 +188,8 @@
             return this;
         },
         prev: function (event) {
-            var active = this.$menu.find('.active').removeClass('active')
-                , prev = active.prev();
+            var active = this.$menu.find('.active').removeClass('active');
+            prev = active.prev();
 
             if (!prev.length)
                 prev = this.$menu.find('li').last();
@@ -295,7 +295,7 @@
             if (!this.mousedover && this.shown) {
                 this.hide();
                 this.abort();
-            };
+            }
             return this;
         },
         click: function (e) {
@@ -340,7 +340,7 @@
                 options = typeof option == 'object' && option;
             if (!data) $this.data('pgSearchAhead', (data = new PGSearchAhead(this, options)));
             if (typeof option == 'string') data[option]();
-        })
+        });
     };
 
     $.fn.pgSearchAhead.defaults = {

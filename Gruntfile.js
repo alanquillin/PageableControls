@@ -3,6 +3,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
 
     // Project configuration.
     grunt.initConfig({
@@ -79,6 +80,16 @@ module.exports = function(grunt) {
             pgSearchAheadCss:{
                 src: ['css/PageableControls.css', 'css/pgSearchAhead.css'],
                 dest: '<%= buildDir %>/css/bundles/searchAhead.bundle.css'
+            }
+        },
+
+        jshint: {
+            dev: {
+                options: {
+                    reporter: require('jshint-stylish'),
+                    force: true
+                },
+                src: ['js/*.js']
             }
         },
 
@@ -181,6 +192,6 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('dev-update', ['copy:dev']);
+    grunt.registerTask('dev-update', ['copy:dev','jshint']);
     grunt.registerTask('build', ['concat', 'uglify', 'copy:deploy', 'compress:deploy']);
 };

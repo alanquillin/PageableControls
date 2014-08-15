@@ -573,6 +573,10 @@ h2 + .row {
     padding: 0 2px;
 }
 
+table thead{
+    font-weight: bold;
+}
+
 
 /* Bootstrap code controls
 -------------------------------------------------- */

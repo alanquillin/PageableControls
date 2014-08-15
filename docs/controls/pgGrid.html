@@ -82,8 +82,8 @@
         <div class="span3 bs-docs-sidebar">
             <ul class="nav nav-list bs-docs-sidenav">
                 <li><a href="#getting-started"><i class="icon-chevron-right"></i> Getting Started</a></li>
-                <li><a href="#options"><i class="icon-chevron-right"></i> Options</a></li>
                 <li><a href="#data-model"><i class="icon-chevron-right"></i> Data Model</a></li>
+                <li><a href="#options"><i class="icon-chevron-right"></i> Options</a></li>
                 <li><a href="#examples"><i class="icon-chevron-right"></i> Examples</a></li>
                 <li class="sub-nav"><a href="#basic-example"><i class="icon-chevron-right"></i> Basic Grid Example</a></li>
                 <li class="sub-nav"><a href="#data-formatter-example"><i class="icon-chevron-right"></i> Data Item Formatter</a></li>
@@ -92,19 +92,214 @@
                 <li class="sub-nav"><a href="#no-title-example"><i class="icon-chevron-right"></i> Hiding the Title</a></li>
                 <li class="sub-nav"><a href="#no-pager-example"><i class="icon-chevron-right"></i> Hiding the Pager</a></li>
                 <li class="sub-nav"><a href="#cust-pager-cont-example"><i class="icon-chevron-right"></i> Custom Pager Container</a></li>
+                <li class="sub-nav"><a href="#multiple-formatters"><i class="icon-chevron-right"></i> Multiple Formatters</a></li>
             </ul>
         </div>
+
         <div class="span9">
             <section id="getting-started" style="padding-top: 0">
                 <h3>Getting started</h3>
-            </section>
+                To start you need to add an element to the markup (normally a <code>&lt;div /&gt;</code>).
+                <br/><br/>
+                1. Using the JQuery plugin method (recommended)
+<pre class="prettyprint linenums">
+&lt;div id="myGridDiv"&gt;&lt;/div&gt;
 
-            <section id="options" style="padding-top: 0">
-                <h3>Options</h3>
+&lt;script language="JavaScript"&gt;
+    $(document).ready(function () {
+        $('#myGridDiv').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'}
+        ],
+        {
+            url: ,
+            dataModel: ,
+            title: "&lt;h3&gt;Test Data&lt;/h3&gt;"
+        });
+    });
+&lt;/script&gt;
+</pre>
+                2. Using the prototype method
+<pre class="prettyprint linenums">
+&lt;div id="myGridDiv"&gt;&lt;/div&gt;
+
+&lt;script language="JavaScript"&gt;
+    $(document).ready(function () {
+        var grid = new PGGrid($('#myGridDiv'), '/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'}
+        ],
+        {
+            url: ,
+            dataModel: ,
+            title: "&lt;h3&gt;Test Data&lt;/h3&gt;"
+        });
+    });
+&lt;/script&gt;
+</pre>
+                <h4>Parameters</h4>
+                <table class="table table-condensed table-bordered table-striped table-options">
+                    <thead>
+                    <tr>
+                        <td>Property</td>
+                        <td>Type</td>
+                        <td>Description</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Url</td>
+                        <td>string</td>
+                        <td>The url of the remote service that will return the grid data</td>
+                    </tr>
+                    <tr>
+                        <td>Data Model</td>
+                        <td>Array&lt;Object&gt;</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Options</td>
+                        <td>object</td>
+                        <td><em>[Optional] </em></td>
+                    </tr>
+                    </tbody>
+                </table>
             </section>
 
             <section id="data-model" style="padding-top: 0">
                 <h3>Data Model</h3>
+                <table class="table table-condensed table-bordered table-striped table-options">
+                    <thead>
+                    <tr>
+                        <td>Property</td>
+                        <td>Type</td>
+                        <td>Description</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>name</td>
+                        <td>string</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>index</td>
+                        <td>string</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>sortable</td>
+                        <td>boolean</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>dataFormatter</td>
+                        <td>function</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><cell></cell>cellFormatter</td>
+                        <td>function</td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="options" style="padding-top: 0">
+                <h3>Options</h3>
+                <table class="table table-condensed table-bordered table-striped table-options">
+                    <thead>
+                        <tr>
+                            <td>Name</td>
+                            <td>Type</td>
+                            <td>Default</td>
+                            <td>Description</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>childRowProperty</td>
+                            <td>string</td>
+                            <td>'children'</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>dataTotalProperty</td>
+                            <td>string</td>
+                            <td>'total'</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>dataItemProperty</td>
+                            <td>string</td>
+                            <td>'items'</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>gridClass</td>
+                            <td>string</td>
+                            <td>'table table-condensed table-bordered table-striped'</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>initLoader</td>
+                            <td>string</td>
+                            <td>'&lt;div&gt;&lt;i class="icon-refresh icon-spin"&gt;&lt;/i&gt; Loading data...&lt;/div&gt;'
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>initialPage</td>
+                            <td>int</td>
+                            <td>1</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>item</td>
+                            <td>string</td>
+                            <td>'&lt;tr&gt;&lt;/tr&gt;',</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>itemIdProperty</td>
+                            <td>string</td>
+                            <td>'id'</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>padLeft</td>
+                            <td>int</td>
+                            <td>2</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>pageSize</td>
+                            <td>int</td>
+                            <td>10</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>sortColumn</td>
+                            <td>string</td>
+                            <td>null</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>sortDirection</td>
+                            <td>string</td>
+                            <td>'ASC'</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>title</td>
+                            <td>string</td>
+                            <td>'&lt;h4&gt;Data&lt;/h4&gt;'</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </section>
 
             <section id="examples" style="padding-top: 0">
@@ -122,12 +317,14 @@
 
 &lt;script language="JavaScript"&gt;
     $(document).ready(function () {
-        $('#myGridDiv').pgGrid({
-            url: '/support/grid-data.php',
-            dataModel: [
-                { name: 'Id', index: 'id'},
-                { name: 'Value', index: 'value'}
-            ],
+        $('#myGridDiv').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'}
+        ],
+        {
+            url: ,
+            dataModel: ,
             title: "&lt;h3&gt;Test Data&lt;/h3&gt;"
         });
     });
@@ -144,34 +341,34 @@
 
 &lt;script language="JavaScript"&gt;
     $(document).ready(function () {
-        $('#myGridDiv2').pgGrid({
-            url: '/support/grid-data.php',
-            dataModel: [
-                { name: 'Id', index: 'id'},
-                { name: 'Value', index: 'value',
-                    dataFormatter: function(val, item){
-                        if(Math.floor(item.id) % 2 == 0)
-                            return val;
+        $('#myGridDiv2').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value',
+                dataFormatter: function(val, item){
+                    if(Math.floor(item.id) % 2 == 0)
+                        return val;
 
-                        return val + ' [edited by formatter]'
-                    }
-                },
-                { name: 'Fibonacci Sequence', sortable: false,
-                    dataFormatter: function(val, item){
-                        var first,second,seq;
-                        for(var i=0;i&lt;item.id;i++){
-                            if(i === 0){
-                                first = 1;
-                                second = 2;
-                            }
-                            seq = first + second;
-                            first = second;
-                            second = seq;
-                        }
-                        return seq
-                    }
+                    return val + ' [edited by formatter]'
                 }
-            ],
+            },
+            { name: 'Fibonacci Sequence', sortable: false,
+                dataFormatter: function(val, item){
+                    var first,second,seq;
+                    for(var i=0;i&lt;item.id;i++){
+                        if(i === 0){
+                            first = 1;
+                            second = 2;
+                        }
+                        seq = first + second;
+                        first = second;
+                        second = seq;
+                    }
+                    return seq
+                }
+            }
+        ],
+        {
             title: "&lt;h3&gt;Test Data&lt;/h3&gt;"
         });
     });
@@ -188,16 +385,16 @@
 
 &lt;script language="JavaScript"&gt;
     $(document).ready(function () {
-        $('#myGridDiv3').pgGrid({
-            url: '/support/grid-data.php',
-            dataModel: [
-                { name: 'Id', index: 'id'},
-                { name: 'Value', index: 'value', cellFormatter: function(cellValue, item, $cell){
-                    if(parseInt(item.id) % 2 == 0){
-                        $cell.addClass('info')
-                    }
-                }}
-            ],
+        $('#myGridDiv3').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value', cellFormatter: function(cellValue, item, $cell){
+                if(parseInt(item.id) % 2 == 0){
+                    $cell.addClass('info')
+                }
+            }}
+        ],
+        {
             title: "&lt;h3&gt;Test Data&lt;/h3&gt;"
         });
     });
@@ -214,17 +411,17 @@
 
 &lt;script language="JavaScript"&gt;
     $(document).ready(function () {
-        $('#myGridDiv4').pgGrid({
-            url: '/support/grid-data.php',
+        $('#myGridDiv4').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'}
+        ],
+        {
             rowFormatter: function($row, item){
                 if(parseInt(item.id) % 2 == 0){
                     $row.css('background-color', 'red')
                 }
             },
-            dataModel: [
-                { name: 'Id', index: 'id'},
-                { name: 'Value', index: 'value'}
-            ],
             title: "&lt;h3&gt;Test Data&lt;/h3&gt;"
         });
     });
@@ -241,12 +438,12 @@
 
 &lt;script language="JavaScript"&gt;
     $(document).ready(function () {
-        $('#myGridDiv6').pgGrid({
-            url: '/support/grid-data.php',
-            dataModel: [
-                { name: 'Id', index: 'id'},
-                { name: 'Value', index: 'value'}
-            ],
+        $('#myGridDiv6').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'}
+        ],
+        {
             showTitle: false
         });
     });
@@ -263,12 +460,12 @@
 
 &lt;script language="JavaScript"&gt;
     $(document).ready(function () {
-        $('#myGridDiv6').pgGrid({
-            url: '/support/grid-data.php',
-            dataModel: [
-                { name: 'Id', index: 'id'},
-                { name: 'Value', index: 'value'}
-            ],
+        $('#myGridDiv6').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'}
+        ],
+        {
             showPager: false,
             title: "&lt;h3&gt;Test Data&lt;/h3&gt;"
         });
@@ -288,12 +485,36 @@
 
 &lt;script language="JavaScript"&gt;
     $(document).ready(function () {
-        $('#myGridDiv7').pgGrid({
-            url: '/support/grid-data.php',
-            dataModel: [
-                { name: 'Id', index: 'id'},
-                { name: 'Value', index: 'value'}
-            ],
+        $('#myGridDiv7').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'}
+        ],
+        {
+            title: "&lt;h3&gt;Test Data&lt;/h3&gt;",
+            pagerContainer: $('#pagerContainer')
+        });
+    });
+&lt;/script&gt;
+</pre>
+            </section>
+
+            <section id="multiple-formatters">
+            <h3>8. Multiple Formatters</h3>
+            <div id="myGridDiv8"></div>
+            <h4>Code:</h4>
+<pre class="prettyprint linenums">
+&lt;div id="myGridDiv7"&gt;&lt;/div&gt;
+&lt;div id="pagerContainer" class="pull-right"&gt;&lt;/div&gt;
+
+&lt;script language="JavaScript"&gt;
+    $(document).ready(function () {
+        $('#myGridDiv7').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'}
+        ],
+        {
             title: "&lt;h3&gt;Test Data&lt;/h3&gt;",
             pagerContainer: $('#pagerContainer')
         });
@@ -307,65 +528,65 @@
 
 <script language="JavaScript">
     $(document).ready(function () {
-        $('#myGridDiv').pgGrid({
-            url: '/support/grid-data.php',
-            dataModel: [
-                { name: 'Id', index: 'id'},
-                { name: 'Value', index: 'value'}
-            ],
+        $('#myGridDiv').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'}
+        ],
+        {
             title: "<h3>Test Data</h3>"
         });
 
-        $('#myGridDiv2').pgGrid({
-            url: '/support/grid-data.php',
-            dataModel: [
-                { name: 'Id', index: 'id'},
-                { name: 'Value', index: 'value',
-                    dataFormatter: function(val, item){
-                        if(Math.floor(item.id) % 2 == 0)
-                            return val;
+        $('#myGridDiv2').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value',
+                dataFormatter: function(val, item){
+                    if(Math.floor(item.id) % 2 == 0)
+                        return val;
 
-                        return val + ' [edited by formatter]'
-                    }
-                },
-                { name: 'Fibonacci Sequence', sortable: false,
-                    dataFormatter: function(val, item){
-                        var first,second,seq;
-                        for(var i=0;i<item.id;i++){
-                            if(i === 0){
-                                first = 1;
-                                second = 2;
-                            }
-                            seq = first + second;
-                            first = second;
-                            second = seq;
-                        }
-                        return seq
-                    }
+                    return val + ' [edited by formatter]'
                 }
-            ],
-            title: "<h3>Test Data</h3>"
-        });
-
-        $('#myGridDiv3').pgGrid({
-            url: '/support/grid-data.php',
-            dataModel: [
-                { name: 'Id', index: 'id'},
-                { name: 'Value', index: 'value', cellFormatter: function(cellValue, item, $cell){
-                    if(parseInt(item.id) % 2 == 0){
-                        $cell.addClass('info')
+            },
+            { name: 'Fibonacci Sequence', sortable: false,
+                dataFormatter: function(val, item){
+                    var first,second,seq;
+                    for(var i=0;i<item.id;i++){
+                        if(i === 0){
+                            first = 1;
+                            second = 2;
+                        }
+                        seq = first + second;
+                        first = second;
+                        second = seq;
                     }
-                }}
-            ],
+                    return seq
+                }
+            }
+        ],
+        {
             title: "<h3>Test Data</h3>"
         });
 
-        $('#myGridDiv4').pgGrid({
-            url: '/support/grid-data.php',
-            dataModel: [
-                { name: 'Id', index: 'id'},
-                { name: 'Value', index: 'value'}
-            ],
+        $('#myGridDiv3').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value', cellFormatter: function(cellValue, item, $cell){
+                if(parseInt(item.id) % 2 == 0){
+                    $cell.addClass('info')
+                }
+            }}
+        ],
+        {
+            title: "<h3>Test Data</h3>"
+        });
+
+        $('#myGridDiv4').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'}
+        ],
+        {
             title: "<h3>Test Data</h3>",
             rowFormatter: function($row, item){
                 if(parseInt(item.id) % 2 == 0){
@@ -375,33 +596,52 @@
             gridClass: 'table table-condensed table-bordered'
         });
 
-        $('#myGridDiv5').pgGrid({
-            url: '/support/grid-data.php',
-            dataModel: [
-                { name: 'Id', index: 'id'},
-                { name: 'Value', index: 'value'}
-            ],
+        $('#myGridDiv5').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'}
+        ],
+        {
+
             showTitle: false,
             gridClass: 'table table-condensed table-bordered'
         });
 
-        $('#myGridDiv6').pgGrid({
-            url: '/support/grid-data.php',
-            dataModel: [
-                { name: 'Id', index: 'id'},
-                { name: 'Value', index: 'value'}
-            ],
+        $('#myGridDiv6').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'}
+        ],
+        {
             showPager: false,
             gridClass: 'table table-condensed table-bordered'
         });
 
-        $('#myGridDiv7').pgGrid({
-            url: '/support/grid-data.php',
-            dataModel: [
-                { name: 'Id', index: 'id'},
-                { name: 'Value', index: 'value'}
-            ],
+        $('#myGridDiv7').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'}
+        ],
+        {
             pagerContainer: $('#pagerContainer'),
+            gridClass: 'table table-condensed table-bordered'
+        });
+
+        $('#myGridDiv8').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value',
+                dataFormatter: [
+                    function(value, data){
+                        return "<strong>" + value + "<strong>";
+                    },
+                    function(value, data){
+                        return "<em>" + value + "<em>";
+                    }
+                ]
+            }
+        ],
+        {
             gridClass: 'table table-condensed table-bordered'
         });
     });

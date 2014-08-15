@@ -1,6 +1,6 @@
 var Pager = (function () {
 
-    "use strict"; // jshint ;_;
+    "use strict";
 
 
     /* pgGrid class definition
@@ -26,7 +26,9 @@ var Pager = (function () {
         // initialize objects
         this.$container = $(this.options.container || '<div class="pull-left pager_container"></div>');
         this.$refreshBtn = $(this.options.refreshBtn || '<i class="icon-refresh icon-active"></i>')
-            .on('click', function(){that.refresh()});
+            .on('click', function(){
+                that.refresh();
+            });
         this.$loader = $(this.options.loader || '<i class="icon-refresh icon-spin"></i>');
         this.$startBtn = $(this.options.startBtn || '<i class="icon-fast-backward icon-disabled"></i>');
         this.$backBtn  = $(this.options.backBtn || '<i class="icon-backward icon-disabled"></i>');
@@ -34,9 +36,13 @@ var Pager = (function () {
         this.$endBtn  = $(this.options.endBtn || '<i class="icon-fast-forward icon-disabled"></i>');
         this.$pageCountText = $(this.options.pageCountText || '<span>1</span>');
         this.$pageSelector = $(this.options.pageSelector || '<select class="page-size-selector"></select>')
-            .on('change', function(){that.changePage(that.$pageSelector.val())});
+            .on('change', function(){
+                that.changePage(that.$pageSelector.val());
+            });
         this.$pageSizeSelector = $(this.options.pageSizeSelector || '<select class="page-size-selector"></select>').
-            on('change', function(){that.changePageSize(that.$pageSizeSelector.val())});
+            on('change', function(){
+                that.changePageSize(that.$pageSizeSelector.val());
+            });
 
         this.render();
     }
@@ -121,7 +127,7 @@ var Pager = (function () {
                     that.$pageSizeSelector.removeAttr('disabled');
                     that.setFooter(totalRecords);
                     that.hideLoader();}
-            })
+            });
         },
         getPage: function(page){
             if(!page)

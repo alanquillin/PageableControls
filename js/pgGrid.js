@@ -2,27 +2,30 @@
     /* pgGrid class definition
      * ================================= */
 
-    var PGGrid = function (element, options) {
+    var PGGrid = function (element, url, dataModel, options) {
         var that = this;
         this.$element = $(element);
+        this.$element.empty();
+
+        this.url = url;
+        this.dataModel = dataModel || this.defaults.dataModel;
 
         // initialize and aggregate options
         this.options = $.extend({}, $.fn.pgGrid.defaults, options);
 
         // initialize properties
         this.item = this.options.item;
-        this.dataModel = this.options.dataModel;
         this.childRowProperty = this.options.childRowProperty;
-        this.expandedRowIds = new Array();
+        this.expandedRowIds = [];
         this.sortColumn = this.options.sortColumn;
         this.sortDirection = this.options.sortDirection;
-        this.url = this.options.url;
         this.dataTotalProperty = this.options.dataTotalProperty;
         this.dataItemProperty = this.options.dataItemProperty;
         this.padLeft = this.options.padLeft;
         this.itemIdProperty = this.options.itemIdProperty;
         this.showTitle = Utils.getOption(this.options, "showTitle", true);
         this.showPager = Utils.getOption(this.options, "showPager", true);
+        this.addGhostChildRowWhenCountIsNotEvent = Utils.getOption(this.options, "addGhostChildRowWhenCountIsNotEvent", true);
 
         // initialize methods
         this.getData = this.options.getData || this.getData;
@@ -110,7 +113,9 @@
                 return this.hide();
             }
 
-            return this.render(data);
+            this.render(data);
+            this.$element.trigger("OnDataLoadComplete", {});
+            return this;
         },
         render: function(data) {
             this.buildBody(data);
@@ -139,7 +144,16 @@
             }
 
             this.buildCols(item, $row, childLevel);
-            this.rowFormatter($row, item);
+            if(this.rowFormatter) {
+                if(Utils.isFunction(this.rowFormatter))
+                    this.rowFormatter($row, item);
+                else if(Utils.isArray(this.rowFormatter)){
+                    for(var i in this.rowFormatter){
+                        if(this.rowFormatter[i] && Utils.isFunction(this.rowFormatter[i]))
+                            this.rowFormatter[i]($row, item);
+                    }
+                }
+            }
             this.$body.append($row);
 
             if (item.hasOwnProperty(this.childRowProperty) && item[this.childRowProperty] && item[this.childRowProperty].length) {
@@ -147,8 +161,14 @@
                     .on('click', function(){ that.toggleChildren($(this), id); });
                 $row.find('td:first').prepend(expander);
 
-                for(var i in item[this.childRowProperty]){
-                    this.buildRow(item[this.childRowProperty][i], childLevel + 1, id);
+                for(var i2 in item[this.childRowProperty]){
+                    this.buildRow(item[this.childRowProperty][i2], childLevel + 1, id);
+                }
+
+                if(item[this.childRowProperty] && item[this.childRowProperty].length > 0 && item[this.childRowProperty].length % 2 !== 0){
+                    var $ghostRow = $('<tr></tr>');
+                    $ghostRow.hide();
+                    this.$body.append($ghostRow);
                 }
             }
         },
@@ -157,10 +177,26 @@
                 var model = this.dataModel[i];
                 var $col = $('<td></td>');
                 var val = item[model.index];
-                if(typeof model.dataFormatter !== 'undefined')
-                    val = model.dataFormatter(val, item);
-                if(typeof model.cellFormatter !== 'undefined')
-                    val = model.cellFormatter(val, item, $col);
+                if(typeof model.dataFormatter !== 'undefined') {
+                    if(Utils.isArray(model.dataFormatter)){
+                        for(var j in model.dataFormatter){
+                            if(Utils.isFunction(model.dataFormatter[j]))
+                                val = model.dataFormatter[j](val, item);
+                        }
+                    }
+                    else if(Utils.isFunction(model.dataFormatter))
+                        val = model.dataFormatter(val, item);
+                }
+                if(typeof model.cellFormatter !== 'undefined') {
+                    if(Utils.isArray(model.cellFormatter)){
+                        for(var j2 in model.cellFormatter){
+                            if(Utils.isFunction(model.cellFormatter[j2]))
+                                model.cellFormatter[j2](val, item, $col);
+                        }
+                    }
+                    else if(Utils.isFunction(model.cellFormatter))
+                        model.cellFormatter(val, item, $col);
+                }
                 $col.append(val);
                 $row.append($col);
             }
@@ -172,6 +208,7 @@
             headerRow.empty();
 
             var that = this;
+
             for(var i in this.dataModel){
                 var hCol = $('<td></td>')
                     .html(this.dataModel[i].name);
@@ -179,36 +216,8 @@
                     hCol.addClass('sortable')
                         .append($('<i class="icon"></i>'))
                         .attr('data-sort-index', this.dataModel[i].index)
-                        .hover(function () {
-                            var me = $(this);
-                            if (that.sortColumn == me.attr('data-sort-index'))
-                                return;
-                            me.find('i').addClass("icon-collapse");
-                        }, function () {
-                            var me = $(this);
-                            if (that.sortColumn == me.attr('data-sort-index'))
-                                return;
-                            me.find('i').removeClass("icon-collapse");
-                        })
-                        .click(function () {
-                            var me = $(this);
-                            me.find('i').removeClass(function (i, css) {
-                                return (css.match(/\bicon-\S+/g) || []).join(' ');
-                            });
-                            if (that.sortColumn == me.attr('data-sort-index')) {
-                                that.sortDirection = that.sortDirection == 'ASC' ? 'DESC' : 'ASC';
-                                me.find('i').addClass(that.sortDirection == 'ASC' ? 'icon-collapse' : 'icon-collapse-up');
-                            }
-                            else {
-                                me.closest('tr').find('i').removeClass(function (i, css) {
-                                    return (css.match(/\bicon-\S+/g) || []).join(' ');
-                                });
-                                that.sortColumn = me.attr('data-sort-index');
-                                that.sortDirection = "ASC";
-                                me.find('i').addClass('icon-collapse');
-                            }
-                            that.pager.refresh();
-                        });
+                        .hover($.proxy(this.headerMouseIn, this), $.proxy(this.headerMouseOut, this))
+                        .click($.proxy(this.headerClick, this));
                 }
                 headerRow.append(hCol);
             }
@@ -245,11 +254,46 @@
         },
         showChildRows: function(parentId){
             var childRows = this.$body.find('tr[data-parent-id=' + parentId + ']');
-            childRows.each(function(index, el){$(el).show()});
+            childRows.each(function(index, el){
+                $(el).show();
+            });
         },
         hideChildRows: function(parentId){
             var childRows = this.$body.find('tr[data-parent-id=' + parentId + ']');
-            childRows.each(function(index, el){$(el).hide()});
+            childRows.each(function(index, el){
+                $(el).hide();
+            });
+        },
+        headerMouseIn: function(e){
+            var me = $(e.target);
+            if (this.sortColumn == me.attr('data-sort-index'))
+                return;
+            me.find('i').addClass("icon-collapse");
+        },
+        headerMouseOut: function(e){
+            var me = $(e.target);
+            if (this.sortColumn == me.attr('data-sort-index'))
+                return;
+            me.find('i').removeClass("icon-collapse");
+        },
+        headerClick: function (e) {
+            var me = $(e.target);
+            me.find('i').removeClass(function (i, css) {
+                return (css.match(/\bicon-\S+/g) || []).join(' ');
+            });
+            if (this.sortColumn == me.attr('data-sort-index')) {
+                this.sortDirection = this.sortDirection == 'ASC' ? 'DESC' : 'ASC';
+                me.find('i').addClass(this.sortDirection == 'ASC' ? 'icon-collapse' : 'icon-collapse-up');
+            }
+            else {
+                me.closest('tr').find('i').removeClass(function (i, css) {
+                    return (css.match(/\bicon-\S+/g) || []).join(' ');
+                });
+                this.sortColumn = me.attr('data-sort-index');
+                this.sortDirection = "ASC";
+                me.find('i').addClass('icon-collapse');
+            }
+            this.pager.refresh();
         }
     };
 
@@ -257,10 +301,10 @@
     /* pgGrid Plugin Definition
      * =========================== */
 
-    $.fn.pgGrid = function(options) {
+    $.fn.pgGrid = function(url, dataModel, options) {
         return this.each(function() {
             var $this = $(this);
-            $this.data('pggrid', new PGGrid(this, options));
+            $this.data('pggrid', new PGGrid(this, url, dataModel, options));
         });
     };
 

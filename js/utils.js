@@ -1,13 +1,13 @@
 var Utils =  {
     isNullOrWhitespace: function (input) {
-        if (this.isUndefined(input) || input == null) return true;
+        if (this.isUndefined(input) || input === null) return true;
 
         // if the input is an object, but is not null, then return false as it has some type of value.
         if (this.isObject)
             return false;
 
         if(this.isString(input))
-            return this.isEmptyString(input)
+            return this.isEmptyString(input);
 
         return false;
     },
