@@ -35,12 +35,12 @@
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 
 .pgGrid tfoot i,
-.pgSearchAhead li.search_footer i {
+.pgSearchAhead li.search-footer i {
     margin: 0 2px;
 }
 
 .pgGrid tfoot span,
-.pgSearchAhead li.search_footer span {
+.pgSearchAhead li.search-footer span {
     padding: 0 2px;
 }
 

@@ -74,11 +74,11 @@ margin: 0;
     background-color: #0097cf;
 }
 
-.pgSearchAhead li.search_footer {
+.pgSearchAhead li.search-footer {
     color: inherit;
     background-color: inherit;
 }
 
-.pgSearchAhead .search_footer div:first-child {
+.pgSearchAhead .search-footer div:first-child {
     margin: 0px 6px 0 6px;
 }

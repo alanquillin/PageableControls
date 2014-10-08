@@ -4,6 +4,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-wrap');
 
     // Project configuration.
     grunt.initConfig({
@@ -94,9 +95,6 @@ module.exports = function(grunt) {
         },
 
         uglify: {
-            options:{
-                enclose: { 'window.jQuery': '$' }
-            },
             pageableControls: {
                 options: {
                     banner: '<%= banners.bundle %>',
@@ -189,9 +187,18 @@ module.exports = function(grunt) {
                     {expand: true, src: ['<%= buildDir %>/**']}
                 ]
             }
+        },
+
+        wrap: {
+            deploy: {
+                src: ['<%= buildDir %>/js/*.js'],
+                dest: '',
+                wrapper: ['var PageableControls = (function () {', '})();']
+            }
         }
+
     });
 
     grunt.registerTask('dev-update', ['copy:dev','jshint']);
-    grunt.registerTask('build', ['concat', 'uglify', 'copy:deploy', 'compress:deploy']);
+    grunt.registerTask('build', ['concat', 'wrap:deploy', 'uglify', 'copy:deploy', 'compress:deploy']);
 };

@@ -114,11 +114,9 @@
 
 &lt;script type="application/javascript"&gt;
     $(document).ready(function(){
-        $('#searchterm').pgSearchAhead({
-            url: '/support/search.php',
+        $('#searchterm').pgSearchAhead('/support/search.php', {
             minLength: 3,
-            itemContentProperty: 'value',
-            pager: new Pager({showPageSizeSelector: false})
+            itemContentProperty: 'value'
         }).on('onSearchStarted', function(event, url){
             toggleLoadingImg(true);
         }).on('onSearchComplete', function(event, data){
@@ -157,11 +155,9 @@
 
 &lt;script type="application/javascript"&gt;
     $(document).ready(function(){
-        $('#searchterm2').pgSearchAhead({
-            url: '/support/search2.php',
+        $('#searchterm2').pgSearchAhead('/support/search.php', {
             minLength: 3,
-            itemContentProperty: 'value',
-            pager: new Pager({showPageSizeSelector: false})
+            itemContentProperty: 'value'
         }).on('onSearchFailed', function(event, error){
             toggleSearchError(true, error);
         });
@@ -187,11 +183,9 @@
 
 <script type="application/javascript">
     $(document).ready(function(){
-        $('#searchterm').pgSearchAhead({
-            url: '/support/search.php',
+        $('#searchterm').pgSearchAhead('/support/search.php', {
             minLength: 3,
-            itemContentProperty: 'value',
-            pager: new Pager({showPageSizeSelector: false})
+            itemContentProperty: 'value'
         }).on('onSearchStarted', function(event, url){
             toggleLoadingImg(true);
         }).on('onSearchComplete', function(event, data){
@@ -200,11 +194,9 @@
             $('#searchResults').html(item['value']);
         });
 
-        $('#searchterm2').pgSearchAhead({
-            url: '/support/search2.php',
+        $('#searchterm2').pgSearchAhead('/support/search2.php', {
             minLength: 3,
-            itemContentProperty: 'value',
-            pager: new Pager({showPageSizeSelector: false})
+            itemContentProperty: 'value'
         }).on('onSearchFailed', function(event, error){
             toggleSearchError(true, error);
         });

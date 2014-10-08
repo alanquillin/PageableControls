@@ -2,7 +2,8 @@
     /* pgSearchAhead class definition
      * ================================= */
 
-    var PGSearchAhead = function (element, options) {
+    var PGSearchAhead = function (element, url, options) {
+        this.url = url;
         var that = this;
         this.options = $.extend({}, $.fn.pgSearchAhead.defaults, options);
 
@@ -11,7 +12,9 @@
         this.search = this.options.search || this.search;
         this.process = this.options.process || this.process;
         this.render = this.options.render || this.render;
+        this.renderItems = this.options.renderItems || this.renderItems;
         this.buildFooter = this.options.buildFooter || this.buildFooter;
+        this.bindFooter = this.options.bindFooter || this.bindFooter;
         this.buildQueryObject = this.options.buildQueryObject || this.buildQueryObject;
 
         // initialize objects
@@ -21,7 +24,6 @@
         // initialize properties
         this.shown = false;
         this.loaded = false;
-        this.url = this.options.url;
         this.item = this.options.item;
         this.footer = this.options.footer;
         this.minLength = this.options.minLength;
@@ -30,16 +32,17 @@
         this.itemsProperty = this.options.itemsProperty;
         this.totalProperty = this.options.totalProperty;
 
-        this.pager = this.options.pager || new Pager({});
+        this.pager = this.options.pager || new Pager({showPageSizeSelector: false});
         $(this.pager).on('onRefresh', function(event, data){
             var wasPagedRequest = this.isPagedRequest;
             this.isPagedRequest = true;
-            that.search(data.currentPage, data.pageSize, wasPagedRequest, function(d){ data.onComplete(d[that.totalProperty]); });
+
+            $.proxy(that.search, that)(data.currentPage, data.pageSize, wasPagedRequest, function(d){ data.onComplete(d[that.totalProperty]); });
         });
 
         // start
+        $.proxy(this.buildFooter, this)();
         this.setListeners();
-        this.buildFooter();
     };
 
     PGSearchAhead.prototype = {
@@ -93,7 +96,7 @@
             var that = this;
             this.searchStarted(query);
 
-            this.req = $.get(this.url, this.buildQueryObject(query, page, limit),
+            this.req = $.get(this.url, $.proxy(this.buildQueryObject, this)(query, page, limit),
                 function ( data, textStatus, jqXHR) {
                     if (typeof (data) === 'undefined' || !data || data.error) {
                         that.searchFailed(jqXHR, textStatus, data.error);
@@ -103,12 +106,13 @@
                     if(query != that.$element.val())
                         return null;
 
+                    $.proxy(that.process, that)(data, query, isPagedRequest);
+
                     that.searchComplete(data);
 
                     if(onComplete)
                         onComplete(data);
 
-                    that.process(data, query, isPagedRequest);
                     this.req = null;
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     that.searchFailed(jqXHR, textStatus, errorThrown);
@@ -131,22 +135,25 @@
 
             this.$element.trigger('onSearchFailed', errorThrown);
         },
+        renderComplete: function(el){
+            this.$element.trigger('onRenderComplete', el);
+        },
         process: function (data, query, isPagedRequest) {
             var items = data[this.itemsProperty];
             if (!items.length) {
                 return this.shown ? this.hide() : this;
             }
 
-            this.render(items, query, data[this.totalProperty], !isPagedRequest);
+            $.proxy(this.render, this)(items, query, data[this.totalProperty], !isPagedRequest);
             this.loaded = true;
-            return this.show();
+            return $.proxy(this.show, this)();
         },
         highlighter: function (item, query) {
             if(typeof(item) == 'object') {
                 if(!item.hasOwnProperty(this.itemContentProperty))
                     return null;
 
-                item[this.itemContentProperty] = this.highlighter(item[this.itemContentProperty], query);
+                item[this.itemContentProperty] = $.proxy(this.highlighter, this)(item[this.itemContentProperty], query);
                 return item[this.itemContentProperty];
             }
 
@@ -156,26 +163,31 @@
             });
         },
         render: function (items, query, total, selectFirstItem) {
-            var that = this;
-
-            items = $(items).map(function (i, item) {
-                i = $(that.item).data('data-value', item);
-                i.find('a').html(that.highlighter(item, query));
-                return i[0];
-            });
+            items = $.proxy(this.renderItems, this)(items, query);
 
             if(selectFirstItem)
                 items.first().addClass('active');
 
             var $ul = this.$menu.find('ul');
-            $ul.find('li:not(.search_footer)').remove();
+            $ul.find('li:not(.search-footer)').remove();
             $ul.prepend(items);
-            var $footer = $ul.find('li.search_footer');
+            var $footer = $ul.find('li.search-footer');
             if(total > items.length)
                 $footer.show();
             else
                 $footer.hide();
+
+            this.renderComplete($ul);
+
             return this;
+        },
+        renderItems: function(items, query){
+            var that = this;
+            return $(items).map(function (i, item) {
+                i = $(that.item).data('data-value', item);
+                i.find('a').html(that.highlighter(item, query));
+                return i[0];
+            });
         },
         next: function (event) {
             var active = this.$menu.find('.active').removeClass('active');
@@ -301,13 +313,13 @@
         click: function (e) {
             e.stopPropagation();
             e.preventDefault();
-            this.select();
+            $.proxy(this.select, this)();
         },
         mouseenter: function (e) {
             this.mousedover = true;
             this.$menu.find('.active').removeClass('active');
             var target = $(e.currentTarget);
-            if(!target.hasClass('search_footer'))
+            if(!target.hasClass('search-footer'))
                 target.addClass('active');
             return this;
         },
@@ -316,15 +328,17 @@
             if (!this.focused && this.shown) this.hide();
             return this;
         },
-        buildFooter: function(){
-            var $footer = $(this.footer)
-                .on('click', $.proxy(function(e){
-                    e.stopPropagation();
-                    e.preventDefault();
-                    this.$element.focus();
-                }, this))
-                .append(this.pager.$container);
-            this.$menu.find('ul').append($footer);
+        buildFooter: function() {
+            var $footer = $(this.footer).on("click", $.proxy(function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                this.$element.focus();
+            }, this)).append(this.pager.$container);
+
+            return $.proxy(this.bindFooter, this)($footer);
+        },
+        bindFooter: function($footer) {
+            this.$menu.find("ul").append($footer);
             return this;
         }
     };
@@ -333,26 +347,22 @@
     /* pgSearchAhead Plugin Definition
      * =========================== */
 
-     $.fn.pgSearchAhead = function (option) {
+     $.fn.pgSearchAhead = function (url, options) {
         return this.each(function () {
-            var $this = $(this),
-                data = $this.data('pgSearchAhead'),
-                options = typeof option == 'object' && option;
-            if (!data) $this.data('pgSearchAhead', (data = new PGSearchAhead(this, options)));
-            if (typeof option == 'string') data[option]();
+            var $this = $(this);
+            $this.data('pgSearchAhead', new PGSearchAhead(this, url, options));
         });
     };
 
     $.fn.pgSearchAhead.defaults = {
         menu: '<div class="search-results dropdown-menu pgSearchAhead"><ul></ul></div>',
         item: '<li><a href="#"></a></li>',
-        footer: '<li class="search_footer"></li>',
+        footer: '<li class="search-footer"></li>',
         itemIdProperty: 'id',
         itemContentProperty: 'content',
         totalProperty: 'total',
         itemsProperty: 'items',
-        minLength: 3,
-        url: null
+        minLength: 3
     };
 
     $.fn.pgSearchAhead.Constructor = PGSearchAhead;
