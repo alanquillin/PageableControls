@@ -1,4 +1,6 @@
 <?php
+    sleep(1);
+
     function cmp_id($a, $b)
     {
         $dir = $_GET["sort_direction"];

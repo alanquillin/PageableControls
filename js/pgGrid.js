@@ -23,6 +23,7 @@
         this.dataItemProperty = this.options.dataItemProperty;
         this.padLeft = this.options.padLeft;
         this.itemIdProperty = this.options.itemIdProperty;
+        this.showLoaderOnRefresh = Utils.getOption(this.options, "showLoaderOnRefresh", false);
         this.showTitle = Utils.getOption(this.options, "showTitle", true);
         this.showPager = Utils.getOption(this.options, "showPager", true);
         this.addGhostChildRowWhenCountIsNotEvent = Utils.getOption(this.options, "addGhostChildRowWhenCountIsNotEvent", true);
@@ -60,6 +61,9 @@
         // initialize pager
         this.pager = this.options.pager || new Pager({});
         $(this.pager).on('onRefresh', function(event, data){
+            if(that.showLoaderOnRefresh){
+                that.$initLoader.show();
+            }
             that.refresh(data.currentPage, data.pageSize,
                 function(d){ data.onComplete(d[that.dataTotalProperty]); });
         });
@@ -323,6 +327,7 @@
         itemIdProperty: 'id',
         padLeft: 2,
         pageSize: 10,
+        showLoaderOnRefresh: false,
         sortColumn: null,
         sortDirection: 'ASC',
         title: '<h4>Data</h4>',
