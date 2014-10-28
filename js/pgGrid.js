@@ -179,6 +179,11 @@
         buildCols: function(item, $row, childLevel){
             for(var i in this.dataModel){
                 var model = this.dataModel[i];
+
+                if(model.hasOwnProperty('hidden') && model.hidden === true){
+                    continue;
+                }
+
                 var $col = $('<td></td>');
                 var val = item[model.index];
                 if(typeof model.dataFormatter !== 'undefined') {
@@ -214,9 +219,13 @@
             var that = this;
 
             for(var i in this.dataModel){
-                var hCol = $('<td></td>')
-                    .html(this.dataModel[i].name);
-                if(!this.dataModel[i].hasOwnProperty('sortable') || this.dataModel[i].sortable){
+                if(this.dataModel[i].hasOwnProperty('hidden') && this.dataModel[i].hidden === true){
+                    continue;
+                }
+
+                var hCol = $('<td></td>').html(this.dataModel[i].name);
+
+                if (!this.dataModel[i].hasOwnProperty('sortable') || this.dataModel[i].sortable) {
                     hCol.addClass('sortable')
                         .append($('<i class="icon"></i>'))
                         .attr('data-sort-index', this.dataModel[i].index)

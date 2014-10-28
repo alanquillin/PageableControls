@@ -95,6 +95,7 @@
                 <li class="sub-nav"><a href="#cust-pager-cont-example"><i class="icon-chevron-right"></i> Custom Pager Container</a></li>
                 <li class="sub-nav"><a href="#multiple-formatters"><i class="icon-chevron-right"></i> Multiple Formatters</a></li>
                 <li class="sub-nav"><a href="#show-loading-overlay"><i class="icon-chevron-right"></i> Show Loading Overlay</a></li>
+                <li class="sub-nav"><a href="#hidden-columns"><i class="icon-chevron-right"></i> Hidden Columns</a></li>
             </ul>
         </div>
 
@@ -172,29 +173,34 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>name</td>
-                        <td>string</td>
-                        <td></td>
+                        <td>cellFormatter</td>
+                        <td>array, function</td>
+                        <td>Function (or array of functions) that will be be processed on the cell.</td>
+                    </tr>
+                    <tr>
+                        <td>dataFormatter</td>
+                        <td>array, function</td>
+                        <td>Function (or array of functions) that will be be processed on the on the data item.</td>
+                    </tr>
+                    <tr>
+                        <td>hidden</td>
+                        <td>boolean</td>
+                        <td>Flag to indicate if the column should be rendered.</td>
                     </tr>
                     <tr>
                         <td>index</td>
                         <td>string</td>
-                        <td></td>
+                        <td>The of the property for the data item that will be displayed in the cell.  This value will be sent to the cell and data formatters.</td>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>string</td>
+                        <td>The column name that will be displayed in the table header.</td>
                     </tr>
                     <tr>
                         <td>sortable</td>
                         <td>boolean</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>dataFormatter</td>
-                        <td>function</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>cellFormatter</td>
-                        <td>function</td>
-                        <td></td>
+                        <td>Flag to indicate if the column is sortable.  If <code>true</code> the sorting icon will appear if the column is currently sorted or on mouseover and the refresh method will be called when the header is clicked.</td>
                     </tr>
                     </tbody>
                 </table>
@@ -635,6 +641,32 @@
 &lt;/script&gt;
 </pre>
             </section>
+
+            <section id="hidden-columns">
+                <h3>10. Hidden Columns</h3>
+                <div id="myGridDiv10"></div>
+                <h4>Code:</h4>
+<pre class="prettyprint linenums">
+&lt;div id="myGridDiv10"&gt;&lt;/div&gt;
+&lt;div id="pagerContainer" class="pull-right"&gt;&lt;/div&gt;
+
+&lt;script language="JavaScript"&gt;
+    $(document).ready(function () {
+        $('#myGridDiv10').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'},
+            { name: 'Hidden column', index: 'value', hidden:true}
+        ],
+        {
+            title: "&lt;h3&gt;Test Data&lt;/h3&gt;",
+            pagerContainer: $('#pagerContainer'),
+            showLoadingOverlay: true
+        });
+    });
+&lt;/script&gt;
+</pre>
+            </section>
         </div>
     </div>
 </div>
@@ -767,6 +799,13 @@
             showLoaderOnRefresh: true,
             gridClass: 'table table-condensed table-bordered'
         });
+
+        $('#myGridDiv10').pgGrid('/support/grid-data.php',
+        [
+            { name: 'Id', index: 'id'},
+            { name: 'Value', index: 'value'},
+            { name: 'Hidden column', index: 'value', hidden:true}
+        ]);
     });
 </script>
 
